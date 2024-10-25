@@ -6,4 +6,8 @@ module.exports = defineConfig({
       // implement node event listeners here
     },
   },
+  component: {
+    viewportWidth: 1280,
+    viewportHeight: 880,
+  }
 });
