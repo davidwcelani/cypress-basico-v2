@@ -112,12 +112,21 @@ describe('Central de Atendimento ao Cliente TAT', () => {
       })
   })
 
-  it.only('seleciona um arquivo utilizando uma fixture para a qual foi dada um alias', function(){
+  it('seleciona um arquivo utilizando uma fixture para a qual foi dada um alias', function(){
     cy.fixture("example.json").as('sampleFile')
     cy.get('#file-upload').selectFile('@sampleFile').should(function($input){
       //console.log($input)
       expect($input[0].files[0].name).to.equal('example.json')
     })
+  })
+
+  it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', function(){
+    cy.get('#privacy a').should('have.attr', 'target', '_blank')
+  })
+
+  it('acessa a página da política de privacidade removendo o target e então clicando no link', function(){
+    cy.get('#privacy a').invoke('removeAttr', 'target').click()
+    cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT - Política de privacidade')
   })
 
 })
