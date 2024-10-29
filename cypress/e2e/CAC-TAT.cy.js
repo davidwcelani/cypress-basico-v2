@@ -1,5 +1,7 @@
 describe('Central de Atendimento ao Cliente TAT', () => {
 
+  const THREE_SECONDS_IN_MILISECONDS = 3000
+
   beforeEach(function() {
     cy.visit('./src/index.html')
   })
@@ -10,21 +12,35 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
   it('preenche os campos obrigatórios e envia o formulário', function() {
     const longText = 'TEST TEXT TEST TEXT TEST TEXT TEST TEXT TEST TEXT TEST TEXT TEST TEXT TEST TEXT TEST TEXT'
+
+    cy.clock()
+
     cy.get('#lastName').type('Celani')
     cy.get('#email').type('davidcelani@mail.com')
     cy.get('#firstName').type('David')
     cy.get('#open-text-area').type(longText, {delay: 0})
     cy.contains('button','Enviar').click() 
     cy.get('.success').should('be.visible')
+
+    cy.tick(THREE_SECONDS_IN_MILISECONDS)
+
+    cy.get('.success').should('not.be.visible')
   })
 
   it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', function() {
+
+    cy.clock()
+
     cy.get('#lastName').type('Celani')
     cy.get('#email').type('davidcelani@mail,com')
     cy.get('#firstName').type('David')
     cy.get('#open-text-area').type('Test')
     cy.contains('button','Enviar').click() 
     cy.get('.error').should('be.visible')
+
+    cy.tick(THREE_SECONDS_IN_MILISECONDS)
+
+    cy.get('.error').should('not.be.visible')
   })
 
   it('campo telefone continua vazio quando preenchido com valor não-numérico', function(){
@@ -34,6 +50,9 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   })
 
   it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function(){
+
+    cy.clock()
+
     cy.get('#firstName').type('David')
     cy.get('#lastName').type('Celani')
     cy.get('#email').type('davidcelani@mail.com')
@@ -41,6 +60,10 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('#open-text-area').type('Test')
     cy.contains('button','Enviar').click() 
     cy.get('.error').should('be.visible')
+
+    cy.tick(THREE_SECONDS_IN_MILISECONDS)
+
+    cy.get('.error').should('not.be.visible')
   })
 
   it('preenche e limpa os campos nome, sobrenome, email e telefone', function(){
@@ -51,13 +74,27 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   })
 
   it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', function(){
+
+    cy.clock()
+
     cy.contains('button','Enviar').click() 
     cy.get('.error').should('be.visible')
+
+    cy.tick(THREE_SECONDS_IN_MILISECONDS)
+
+    cy.get('.error').should('not.be.visible')
   })
 
   it('envia o formulário com sucesso usando um comando customizado', function(){
+
+    cy.clock()
+
     cy.fillMandatoryFieldsAndSubmit()
     cy.get('.success').should('be.visible')
+
+    cy.tick(THREE_SECONDS_IN_MILISECONDS)
+
+    cy.get('.success').should('not.be.visible')
   })
 
   it('seleciona um produto (YouTube) por seu texto', function(){
@@ -90,9 +127,16 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   })
 
   it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function(){
+
+    cy.clock()
+
     cy.get('input[type="checkbox"]').last().check()
     cy.fillMandatoryFieldsAndSubmit()
     cy.get('.error').should('be.visible')
+
+    cy.tick(THREE_SECONDS_IN_MILISECONDS)
+
+    cy.get('.error').should('not.be.visible')
   })
 
   it('seleciona um arquivo da pasta fixtures', function(){
